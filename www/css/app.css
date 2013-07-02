@@ -1,0 +1,41 @@
+#hotel_details .ui-title {
+    margin: 0.6em 5% 0.8em 80px !important;
+}
+
+
+.swipe {
+  overflow: hidden;
+  visibility: hidden;
+  position: relative;
+}
+.swipe-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.swipe-wrap > div {
+  float:left;
+  width:100%;
+  position: relative;
+}
+
+#pricing,
+#stars,
+#location,
+#rooms {
+	display: inline;
+}
+
+.info_block.pricing {
+}
+
+
+.listimage {
+	width:80px;
+	height:80px;
+	float:left;
+	background-size: cover;
+}
+
+.listcontent  {
+	padding-left: 93px;
+}
