@@ -37,5 +37,24 @@
 }
 
 .listcontent  {
-	padding-left: 93px;
+	padding: 10px 0 10px 10px;
+}
+
+.listcontent p {
+	margin-top:2px;
+}
+
+#hotel-buttons {
+	text-align: center;
+	margin:20px 0;
+}
+
+#hotel-data h2 {
+	text-align:center;
+}
+
+.map-image {
+	width:80%;
+	height:80%;
+	margin:0 10%;
 }
