@@ -44,12 +44,12 @@
 	margin-top:2px;
 }
 
-#hotel-buttons {
+.buttonsContainer {
 	text-align: center;
 	margin:20px 0;
 }
 
-#hotel-data h2 {
+.dataContainer h2 {
 	text-align:center;
 }
 

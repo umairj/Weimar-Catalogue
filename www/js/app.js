@@ -126,7 +126,6 @@ function initHotelDetails() {
 	
 	
 	loadHotelData(currentHotel);
-	//loadHotelMap(currentHotel);
 	loadHotelImages(currentHotel);
 }
 
@@ -142,7 +141,7 @@ function loadHotelData( hotel ) {
 	
 	var map_image = 'http://maps.googleapis.com/maps/api/staticmap?markers=';
 	map_image += hotel.Coordinates;
-	map_image += '&zoom=16&size=350x350&sensor=false';
+	map_image += '&zoom=16&size=350x350&scale=2&sensor=false';
 			
 	
 	$('#hotel-data')
@@ -178,11 +177,11 @@ function loadHotelImages( hotel ) {
 	
 	
 	var sliderTimeout = isMobile ? 2000 : 500;
-	setTimeout(initSlider, sliderTimeout);
+	setTimeout("initSlider('slider');", sliderTimeout);
 }
 
-function initSlider() {
-	window.mySlider = new Swipe(document.getElementById("slider"), {
+function initSlider(id) {
+	window.mySlider = new Swipe(document.getElementById(id), {
 		startSlide: 0,
 		// speed: 400,
 		auto: 2000,
@@ -212,10 +211,39 @@ function initRestaurantList() {
 	
 	// TODO: Load restaurant list
 	
+	var $restaurantsList = $('#restaurant_listview');
+	var restaurantsData = data.Restaurants;
+	var restaurantsElementsCollection = [];
+	
+	console.log(restaurantsData);
+	
+	
+	for( var i in restaurantsData ) {
+		var currentRestaurant = restaurantsData[i];
+		var $restaurantElement = $('<li>');
+		$restaurantElement.attr('class','listcontent');
+		$restaurantElement.append('<a>');
+		$restaurantElement.find('a')
+					.attr('href','#restaurant_details')
+					.html(currentRestaurant.Name)
+					.append('<img class="listimage" src="'+currentRestaurant.Pictures[0]+'" />')
+					.append('<p>'+currentRestaurant.Location+'</p>')
+					.append('<p>'+currentRestaurant.OpeningHours+'</p>')
+					.data('index',i)
+					.click(function(){
+							showRestaurant($(this).data('index'));
+						});
+		restaurantsElementsCollection.push($restaurantElement);
+	}
+	
+	$restaurantsList
+		.append(restaurantsElementsCollection)
+		.listview('refresh');
+	
 }
 
 function showRestaurant(restaurantindex) {
-	selectedRestaurantIndex = restaurantlindex; 
+	selectedRestaurantIndex = restaurantindex; 
 	$.mobile.changePage($("#restaurant_details"));
 }
 
@@ -233,14 +261,90 @@ $('#restaurant_details').on('pagebeforeshow', function() {
 });
 
 function initRestaurantDetails() {
-	// TODO: Load all hotel details 
+	// TODO: Load all restaurant details 
 	// hint: how could  selectedRestaurantIndex  be useful here?
 
-	var restaurant = data.Restaurants[0];
-	alert(restaurant.Name);
-
+	var currentRestaurant = data.Restaurants[selectedRestaurantIndex];
 	
-	//loadRestaurantData(restaurant, selectedRestaurantIndex);
-	//loadRestaurantMap(restaurant);
-	//loadRestaurantImages(restaurant);
+	
+	
+	loadRestaurantData(currentRestaurant);
+	loadRestaurantImages(currentRestaurant);
 }
+
+function loadRestaurantData(restaurant) {
+	$('#restaurant_details_header').html(restaurant.Name);
+	
+	var address = 
+			restaurant.Name+'<br/>'+
+			restaurant.Street+'<br/>'+
+			restaurant.ZIPCode+', '+restaurant.Town+'<br/>'+
+			restaurant.Telephone+'<br/>'+
+			restaurant.Email+'</p>';
+	
+	var map_image = 'http://maps.googleapis.com/maps/api/staticmap?markers=';
+	map_image += restaurant.Coordinates;
+	map_image += '&zoom=16&size=350x350&scale=2&sensor=false';
+			
+	
+	$('#restaurant-data')
+		.empty()
+		.append('<h2>'+restaurant.Name+'</h2>')
+		.append('<p><strong>Type:</strong> '+restaurant.Type+'</p>')
+		.append('<p><strong>Opening Hours:</strong> '+restaurant.OpeningHours+' stars</p>')
+		.append('<p><strong>Location:</strong> '+restaurant.Location+'</p>')
+		.append('<p><strong>Seating:</strong> '+restaurant.Seats+'</p>')
+		.append('<p>'+restaurant.Extra+'</p>')
+		.append('<h3>Address & Contact</h3>')
+		.append('<p>'+address+'</p>')
+		.append('<h3>Description</h3>')
+		.append('<p>'+restaurant.Description+'</p>')
+		.append('<h3>Map</h3>')
+		.append('<img class="map-image" src="'+map_image+'" />');
+	
+
+}
+
+function loadRestaurantImages( restaurant ) {
+	
+	var restaurantImageElementsCollection = [];
+	var pictures = restaurant.Pictures;
+	
+	
+	for( var i in pictures ) {
+		var pictureHtml = '<div display="none"><img src="'+pictures[i]+'" height="200" width="300"/></div>';
+		restaurantImageElementsCollection.push( $( pictureHtml ) );
+	}
+	
+	$('#restaurant_photos')
+		.empty()
+		.append(restaurantImageElementsCollection);
+	
+	
+	var sliderTimeout = isMobile ? 2000 : 500;
+	setTimeout("initSlider('restaurantSlider');", sliderTimeout);
+}
+
+
+function InitRestaurantDetailsButtons() {
+	$('#restaurant-call-btn').click(function(){
+		if( !selectedRestaurantIndex ) {
+			return;
+		}
+		var restaurant = data.Restaurants[selectedRestaurantIndex];
+	});
+	
+	$('#restaurant-contact-btn').click(function(){
+		if( !selectedRestaurantIndex ) {
+			return;
+		}
+		var restaurant = data.Restaurants[selectedRestaurantIndex];
+	});
+	
+	$('#restaurant-maps-btn').click(function(){
+		if( !selectedRestaurantIndex ) {
+			return;
+		}
+		var restaurant = data.Restaurants[selectedRestaurantIndex];
+	});
+} 
